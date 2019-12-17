@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
     in_filename = argv[1];
     out_filename = argv[2];
 
-    av_log_set_level(AV_LOG_TRACE);
+    av_log_set_level(AV_LOG_INFO);
 
     av_register_all();
     avformat_network_init();
@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
             break;
         in_stream = ifmt_ctx->streams[pkt.stream_index];
         out_stream = ofmt_ctx->streams[pkt.stream_index];
-        log_packet(ifmt_ctx, &pkt, "in");
+        //log_packet(ifmt_ctx, &pkt, "in");
         /* copy packet */
         pkt.pts = av_rescale_q_rnd(pkt.pts, in_stream->time_base, out_stream->time_base,
                                    AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
@@ -101,11 +101,11 @@ int main(int argc, char **argv) {
             pkt.dts = dts + 1;
         }
         dts = pkt.dts;
-        pkt.dts = av_rescale_q_rnd(pkt.dts, in_stream->time_base, out_stream->time_base,
+        /*pkt.dts = av_rescale_q_rnd(pkt.dts, in_stream->time_base, out_stream->time_base,
                                    AV_ROUND_NEAR_INF | AV_ROUND_PASS_MINMAX);
         pkt.duration = av_rescale_q(pkt.duration, in_stream->time_base, out_stream->time_base);
-        pkt.pos = -1;
-        log_packet(ofmt_ctx, &pkt, "out");
+        pkt.pos = -1;*/
+        //log_packet(ofmt_ctx, &pkt, "out");
         ret = av_interleaved_write_frame(ofmt_ctx, &pkt);
         if (ret < 0) {
             fprintf(stderr, "Error muxing packet\n");
